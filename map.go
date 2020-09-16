@@ -1,5 +1,7 @@
 package stringset
 
+import "encoding/json"
+
 func makeMap(keys []string) (m Map) {
 	m = make(Map, len(keys))
 	for _, key := range keys {
@@ -71,5 +73,21 @@ func (m Map) Slice() (keys []string) {
 		keys = append(keys, key)
 	}
 
+	return
+}
+
+// MarshalJSON is a JSON encoding helper func
+func (m Map) MarshalJSON() (bs []byte, err error) {
+	return json.Marshal(m.Slice())
+}
+
+// UnmarshalJSON is a JSON decoding helper func
+func (m *Map) UnmarshalJSON(bs []byte) (err error) {
+	var keys []string
+	if err = json.Unmarshal(bs, &keys); err != nil {
+		return
+	}
+
+	*m = makeMap(keys)
 	return
 }

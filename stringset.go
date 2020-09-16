@@ -83,16 +83,10 @@ func (s *StringSet) Len() int {
 
 // MarshalJSON is a JSON encoding helper func
 func (s *StringSet) MarshalJSON() (bs []byte, err error) {
-	return json.Marshal(s.Slice())
+	return json.Marshal(s.m)
 }
 
 // UnmarshalJSON is a JSON decoding helper func
 func (s *StringSet) UnmarshalJSON(bs []byte) (err error) {
-	var keys []string
-	if err = json.Unmarshal(bs, &keys); err != nil {
-		return
-	}
-
-	s.m = makeMap(keys)
-	return
+	return json.Unmarshal(bs, &s.m)
 }

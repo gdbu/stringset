@@ -16,8 +16,14 @@ func makeMap(keys []string) (m Map) {
 type Map map[string]struct{}
 
 // Set will place a key
-func (m Map) Set(key string) {
-	m[key] = struct{}{}
+func (m *Map) Set(key string) {
+	mm := *m
+	if mm == nil {
+		*m = make(Map, 1)
+		mm = *m
+	}
+
+	mm[key] = struct{}{}
 }
 
 // SetMany will place multiple keys
@@ -29,6 +35,10 @@ func (m Map) SetMany(keys []string) {
 
 // Unset will remove a key
 func (m Map) Unset(key string) {
+	if m == nil {
+		return
+	}
+
 	delete(m, key)
 }
 
@@ -41,6 +51,10 @@ func (m Map) UnsetMany(keys []string) {
 
 // Has will return whether or not a key exists
 func (m Map) Has(key string) (has bool) {
+	if m == nil {
+		return
+	}
+
 	_, has = m[key]
 	return
 }
@@ -69,6 +83,10 @@ func (m Map) HasOne(keys []string) (has bool) {
 
 // Slice will return the keys as a slice
 func (m Map) Slice() (keys []string) {
+	if m == nil {
+		return
+	}
+
 	for key := range m {
 		keys = append(keys, key)
 	}

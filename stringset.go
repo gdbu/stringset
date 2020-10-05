@@ -69,6 +69,10 @@ func (s *StringSet) HasOne(keys ...string) (has bool) {
 
 // Slice will return the keys as a slice
 func (s *StringSet) Slice() (keys []string) {
+	if s == nil {
+		return
+	}
+
 	s.mux.RLock()
 	defer s.mux.RUnlock()
 	return s.m.Slice()

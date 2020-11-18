@@ -3,7 +3,16 @@ package stringset
 import "encoding/json"
 
 // MakeMap will initialize a new map
-func MakeMap(keys []string) (m Map) {
+func MakeMap(keys ...string) (m Map) {
+	m = make(Map, len(keys))
+	for _, key := range keys {
+		m.Set(key)
+	}
+
+	return
+}
+
+func makeMap(keys []string) (m Map) {
 	m = make(Map, len(keys))
 	for _, key := range keys {
 		m.Set(key)
@@ -107,6 +116,6 @@ func (m *Map) UnmarshalJSON(bs []byte) (err error) {
 		return
 	}
 
-	*m = MakeMap(keys)
+	*m = makeMap(keys)
 	return
 }

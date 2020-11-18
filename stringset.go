@@ -8,7 +8,7 @@ import (
 // New will create a new instance of StringSet
 func New(keys ...string) *StringSet {
 	var s StringSet
-	s.m = MakeMap(keys)
+	s.m = makeMap(keys)
 	return &s
 }
 

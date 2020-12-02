@@ -78,6 +78,20 @@ func (s *StringSet) Slice() (keys []string) {
 	return s.m.Slice()
 }
 
+// IsMatch will return whether or not two StringSets are an identical match
+func (s *StringSet) IsMatch(a *StringSet) (isMatch bool) {
+	if s == nil {
+		return
+	}
+
+	s.mux.RLock()
+	defer s.mux.RUnlock()
+	a.mux.RLock()
+	defer a.mux.RUnlock()
+
+	return s.m.IsMatch(a.m)
+}
+
 // Len will return the length of the string set
 func (s *StringSet) Len() int {
 	s.mux.RLock()

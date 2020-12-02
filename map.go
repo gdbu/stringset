@@ -104,6 +104,21 @@ func (m Map) Slice() (keys []string) {
 	return
 }
 
+// IsMatch will return whether or not two Maps are an identical match
+func (m Map) IsMatch(a Map) (isMatch bool) {
+	if len(m) != len(a) {
+		return false
+	}
+
+	for key := range m {
+		if !a.Has(key) {
+			return false
+		}
+	}
+
+	return true
+}
+
 // MarshalJSON is a JSON encoding helper func
 func (m Map) MarshalJSON() (bs []byte, err error) {
 	return json.Marshal(m.Slice())

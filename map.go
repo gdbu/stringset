@@ -97,6 +97,7 @@ func (m Map) Slice() (keys []string) {
 		return
 	}
 
+	keys = make([]string, 0, len(m))
 	for key := range m {
 		keys = append(keys, key)
 	}

@@ -1,6 +1,9 @@
 package stringset
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"strings"
+)
 
 // MakeMap will initialize a new map
 func MakeMap(keys ...string) (m Map) {
@@ -133,5 +136,13 @@ func (m *Map) UnmarshalJSON(bs []byte) (err error) {
 	}
 
 	*m = makeMap(keys)
+	return
+}
+
+// SetAsString will set a map from a comma separated string value
+// Note: This allows stringset to match the reflectio.Setter interface
+func (m *Map) SetAsString(value string) (err error) {
+	spl := strings.Split(value, ",")
+	m.SetMany(spl)
 	return
 }

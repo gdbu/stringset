@@ -59,7 +59,7 @@ func createTestSet(size int) (m Map) {
 	m = make(Map, size)
 	for i := 0; i < size; i++ {
 
-		key := fmt.Sprintf("%12d", i)
+		key := fmt.Sprintf("%012d", i)
 		m.Set(key)
 	}
 

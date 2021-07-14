@@ -125,7 +125,25 @@ func (m Map) IsMatch(a Map) (isMatch bool) {
 
 // MarshalJSON is a JSON encoding helper func
 func (m Map) MarshalJSON() (bs []byte, err error) {
-	return json.Marshal(m.Slice())
+	ref := make([]byte, 0, 32)
+	ref = append(ref, '[')
+	var seenFirst bool
+	for key := range m {
+		if !seenFirst {
+			seenFirst = true
+		} else {
+			ref = append(ref, ',')
+		}
+
+		ref = append(ref, '"')
+		ref = append(ref, key...)
+		ref = append(ref, '"')
+
+	}
+
+	ref = append(ref, ']')
+	bs = ref
+	return
 }
 
 // UnmarshalJSON is a JSON decoding helper func
@@ -144,5 +162,27 @@ func (m *Map) UnmarshalJSON(bs []byte) (err error) {
 func (m *Map) SetAsString(value string) (err error) {
 	spl := strings.Split(value, ",")
 	m.SetMany(spl)
+	return
+}
+
+func (m Map) getJSONBytesLength() (length int) {
+	// Increment length by two for surrounding brackets
+	length += 2
+
+	if len(m) == 0 {
+		return
+	}
+
+	for key := range m {
+		// Increment for length of key
+		length += len(key)
+		// Increment length
+		length += 2
+		// Increment length by one for comma
+		length += 1
+	}
+
+	// Decrement so we don't account for trailing comma
+	length -= 1
 	return
 }

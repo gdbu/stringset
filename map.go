@@ -1,9 +1,10 @@
 package stringset
 
 import (
-	"encoding/json"
 	"strings"
 )
+
+var replacer = strings.NewReplacer("\"", "\\\"")
 
 // MakeMap will initialize a new map
 func MakeMap(keys ...string) (m Map) {
@@ -125,17 +126,40 @@ func (m Map) IsMatch(a Map) (isMatch bool) {
 
 // MarshalJSON is a JSON encoding helper func
 func (m Map) MarshalJSON() (bs []byte, err error) {
-	return json.Marshal(m.Slice())
+	var seenFirst bool
+	bs = make([]byte, 0, 16*len(m))
+	bs = append(bs, '[')
+	for key := range m {
+		if !seenFirst {
+			seenFirst = true
+		} else {
+			bs = append(bs, ',')
+		}
+
+		bs = append(bs, '"')
+		if strings.Contains(key, "\"") {
+			bs = append(bs, replacer.Replace(key)...)
+		} else {
+			bs = append(bs, key...)
+		}
+		bs = append(bs, '"')
+
+	}
+
+	bs = append(bs, ']')
+	return
 }
 
 // UnmarshalJSON is a JSON decoding helper func
 func (m *Map) UnmarshalJSON(bs []byte) (err error) {
-	var keys []string
-	if err = json.Unmarshal(bs, &keys); err != nil {
+	nm := make(Map, countItems(bs))
+	if err = forEachKey(bs, func(key string) {
+		nm.Set(key)
+	}); err != nil {
 		return
 	}
 
-	*m = makeMap(keys)
+	*m = nm
 	return
 }
 

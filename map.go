@@ -127,7 +127,7 @@ func (m Map) IsMatch(a Map) (isMatch bool) {
 // MarshalJSON is a JSON encoding helper func
 func (m Map) MarshalJSON() (bs []byte, err error) {
 	var seenFirst bool
-	bs = make([]byte, 0, 32)
+	bs = make([]byte, 0, 16*len(m))
 	bs = append(bs, '[')
 	for key := range m {
 		if !seenFirst {

@@ -152,7 +152,7 @@ func (m Map) MarshalJSON() (bs []byte, err error) {
 
 // UnmarshalJSON is a JSON decoding helper func
 func (m *Map) UnmarshalJSON(bs []byte) (err error) {
-	nm := Map{}
+	nm := make(Map, countItems(bs))
 	if err = forEachKey(bs, func(key string) {
 		nm.Set(key)
 	}); err != nil {

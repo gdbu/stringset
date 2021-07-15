@@ -1,9 +1,10 @@
 package stringset
 
 import (
-	"encoding/json"
 	"strings"
 )
+
+var replacer = strings.NewReplacer("\"", "\\\"")
 
 // MakeMap will initialize a new map
 func MakeMap(keys ...string) (m Map) {
@@ -125,35 +126,40 @@ func (m Map) IsMatch(a Map) (isMatch bool) {
 
 // MarshalJSON is a JSON encoding helper func
 func (m Map) MarshalJSON() (bs []byte, err error) {
-	ref := make([]byte, 0, 32)
-	ref = append(ref, '[')
 	var seenFirst bool
+	bs = make([]byte, 0, 32)
+	bs = append(bs, '[')
 	for key := range m {
 		if !seenFirst {
 			seenFirst = true
 		} else {
-			ref = append(ref, ',')
+			bs = append(bs, ',')
 		}
 
-		ref = append(ref, '"')
-		ref = append(ref, key...)
-		ref = append(ref, '"')
+		bs = append(bs, '"')
+		if strings.Contains(key, "\"") {
+			bs = append(bs, replacer.Replace(key)...)
+		} else {
+			bs = append(bs, key...)
+		}
+		bs = append(bs, '"')
 
 	}
 
-	ref = append(ref, ']')
-	bs = ref
+	bs = append(bs, ']')
 	return
 }
 
 // UnmarshalJSON is a JSON decoding helper func
 func (m *Map) UnmarshalJSON(bs []byte) (err error) {
-	var keys []string
-	if err = json.Unmarshal(bs, &keys); err != nil {
+	nm := Map{}
+	if err = forEachKey(bs, func(key string) {
+		nm.Set(key)
+	}); err != nil {
 		return
 	}
 
-	*m = makeMap(keys)
+	*m = nm
 	return
 }
 
@@ -162,27 +168,5 @@ func (m *Map) UnmarshalJSON(bs []byte) (err error) {
 func (m *Map) SetAsString(value string) (err error) {
 	spl := strings.Split(value, ",")
 	m.SetMany(spl)
-	return
-}
-
-func (m Map) getJSONBytesLength() (length int) {
-	// Increment length by two for surrounding brackets
-	length += 2
-
-	if len(m) == 0 {
-		return
-	}
-
-	for key := range m {
-		// Increment for length of key
-		length += len(key)
-		// Increment length
-		length += 2
-		// Increment length by one for comma
-		length += 1
-	}
-
-	// Decrement so we don't account for trailing comma
-	length -= 1
 	return
 }

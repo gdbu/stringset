@@ -69,3 +69,14 @@ func forEachKey(bs []byte, fn func(key string)) (err error) {
 
 	return
 }
+
+func countItems(bs []byte) (count int) {
+	for _, b := range bs {
+		if b == ',' {
+			count++
+		}
+	}
+
+	count++
+	return
+}

@@ -15,6 +15,11 @@ func MakeMap(keys ...string) (m Map) {
 	return
 }
 
+func newMap(keys []string) *Map {
+	m := makeMap(keys)
+	return &m
+}
+
 func makeMap(keys []string) (m Map) {
 	m = make(Map, len(keys))
 	for _, key := range keys {
@@ -40,7 +45,7 @@ func (m *Map) Set(key string) {
 }
 
 // SetMany will place multiple keys
-func (m Map) SetMany(keys []string) {
+func (m *Map) SetMany(keys []string) {
 	for _, key := range keys {
 		m.Set(key)
 	}
@@ -109,18 +114,23 @@ func (m Map) Slice() (keys []string) {
 }
 
 // IsMatch will return whether or not two Maps are an identical match
-func (m Map) IsMatch(a Map) (isMatch bool) {
-	if len(m) != len(a) {
+func (m Map) IsMatch(in StringSet) (isMatch bool) {
+	if len(m) != in.Len() {
 		return false
 	}
 
 	for key := range m {
-		if !a.Has(key) {
+		if !in.Has(key) {
 			return false
 		}
 	}
 
 	return true
+}
+
+// Len will return the length of the map
+func (m Map) Len() (n int) {
+	return len(m)
 }
 
 // MarshalJSON is a JSON encoding helper func

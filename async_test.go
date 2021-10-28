@@ -6,15 +6,15 @@ import (
 	"testing"
 )
 
-var testKeys *StringSet
+var testKeys *Async
 
-func TestStringSet_MarshalJSON(t *testing.T) {
+func TestAsync_MarshalJSON(t *testing.T) {
 	var (
 		output []byte
 		err    error
 	)
 
-	ss := New("foo", "bar", "baz")
+	ss := NewAsyncMap("foo", "bar", "baz")
 
 	if output, err = ss.MarshalJSON(); err != nil {
 		t.Fatal(err)
@@ -23,9 +23,9 @@ func TestStringSet_MarshalJSON(t *testing.T) {
 	fmt.Println("Output!", string(output))
 }
 
-func TestStringSet_UnmarshalJSON(t *testing.T) {
+func TestAsync_UnmarshalJSON(t *testing.T) {
 	var (
-		ss  *StringSet
+		ss  *Async
 		err error
 	)
 
@@ -36,24 +36,24 @@ func TestStringSet_UnmarshalJSON(t *testing.T) {
 	fmt.Println("Parsed!", ss)
 }
 
-func ExampleNew() {
+func ExampleNewAsyncMap() {
 	// Initialize new stringset
-	testKeys = New()
+	testKeys = NewAsyncMap()
 }
 
-func ExampleStringSet_Set() {
+func ExampleAsync_Set() {
 	// Set foo key
 	testKeys.Set("foo")
 	// Set bar key
 	testKeys.Set("bar")
 }
 
-func ExampleStringSet_Unset() {
+func ExampleAsync_Unset() {
 	// Remove bar key
 	testKeys.Unset("bar")
 }
 
-func ExampleStringSet_Has() {
+func ExampleAsync_Has() {
 	if testKeys.Has("foo") {
 		fmt.Println("We have foo!")
 	}
@@ -63,7 +63,7 @@ func ExampleStringSet_Has() {
 	}
 }
 
-func ExampleStringSet_Slice() {
+func ExampleAsync_Slice() {
 	keys := testKeys.Slice()
 	for _, key := range keys {
 		fmt.Printf("Iterating key: %s\n", key)

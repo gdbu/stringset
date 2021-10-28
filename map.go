@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+var _ StringSet = &Map{}
+
 // MakeMap will initialize a new map
 func MakeMap(keys ...string) (m Map) {
 	m = make(Map, len(keys))

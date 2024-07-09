@@ -27,10 +27,6 @@ type Sorted struct {
 
 // Set will place a key
 func (s *Sorted) Set(key string) {
-	if s == nil {
-		*s = makeSorted(nil)
-	}
-
 	s.d.Set(key)
 }
 

@@ -1,5 +1,5 @@
 module github.com/gdbu/stringset
 
-go 1.15
+go 1.22
 
-require github.com/gdbu/bst v0.2.0
+require github.com/gdbu/bst v0.5.1

@@ -1,6 +1,8 @@
 # StringSet
 StringSet is a string cache used for storing a key up to once. This utility is useful when managing set-lists for unique keys.
 
+**Note: SortedSet has been removed. If you want this functionality, please check out https://github.com/gdbu/bst**
+
 ## Usage
 
 ### New
